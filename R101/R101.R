@@ -231,6 +231,6 @@ while (ii) {
 result1
 #################################################
 # 13. Function
-source("Quadratic.R")
+source("R101/Quadratic.R")
 answ <- twosol(0,3,ee=10^(-5))
 answ
