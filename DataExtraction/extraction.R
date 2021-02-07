@@ -292,7 +292,60 @@ dim(Iris_test)
 index2 <- createFolds(Iris$Species,k = 3)
 index2
 
+#################################################
+# Data Description
+iris <- read.csv("DataExtraction/data/Iris.csv")
+apply(iris[,c(2:5)],2,mean)
+apply(iris[,c(2:5)],2,median)
 
+apply(iris[,c(2:5)],2,var)
+apply(iris[,c(2:5)],2,sd)
+apply(iris[,c(2:5)],2,mad)
+apply(iris[,c(2:5)],2,sd) / apply(iris[,c(2:5)],2,mean)
+apply(iris[,c(2:5)],2,quantile)
+apply(iris[,c(2:5)],2,fivenum)
+apply(iris[,c(2:5)],2,range)
+apply(iris[,c(2:5)],2,IQR)
 
+install.packages("moments")
+library(moments)
+apply(iris[,c(2:5)],2,skewness)
+apply(iris[,c(2:5)],2,kurtosis)
 
+library(ggplot2)
+library(tidyr)
+irislong = gather(iris[,c(2:5)],key="varname",
+                  value="value",SepalLengthCm:PetalWidthCm)
+ggplot(irislong,aes(colour = varname,linetype = varname))+
+  theme_bw()+geom_density(aes(value),bw = 0.5)
+ggplot(irislong,aes(colour = varname,fill = varname,linetype = varname))+
+  theme_bw()+geom_density(aes(value),bw = 0.5,alpha = 0.4)
 
+plot(density(iris$SepalWidthCm))
+skewness(iris$SepalWidthCm)
+#################################################
+# Similarity
+cor(iris[,c(2:5)])
+
+library(dplyr)
+newdata <- iris%>%group_by(Species)%>%
+  summarise(SepalLengthMean = mean(SepalLengthCm),
+            SepalWidthMean = mean(SepalWidthCm),
+            PetalLengthMean = mean(PetalLengthCm),
+            PetalWidthMean = mean(PetalWidthCm))
+
+newdata 
+rownames(newdata) <- newdata$Species
+newdata
+newdata$Species <- NULL
+newdata
+
+dist(newdata,method = "euclidean",upper = T,diag = T)
+
+dist(newdata,method = "manhattan",upper = T,diag = T)
+
+dist(newdata,method = "maximum",upper = T,diag = T)
+
+dist(newdata,method = "canberra",upper = T,diag = T)
+
+dist(newdata,method = "minkowski",upper = T,diag = T,p = 0.5)
