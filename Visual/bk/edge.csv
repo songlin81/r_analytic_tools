@@ -1,0 +1,113 @@
+"Country.y","Country.x","connectnumber","etype"
+"Algeria","France",67,1
+"Australia","New Zealand",64,1
+"Austria","Germany",67,1
+"Bahamas","United States",72,1
+"Belgium","Spain",60,1
+"Brazil","United States",57,1
+"Canada","United States",364,3
+"China","Hong Kong",116,2
+"China","Japan",140,2
+"China","United States",59,1
+"China","Thailand",72,1
+"China","South Korea",151,2
+"China","Taiwan",191,2
+"Croatia","Germany",57,1
+"Cyprus","United Kingdom",55,1
+"Dominican Republic","United States",61,1
+"Egypt","Saudi Arabia",54,1
+"France","Germany",84,1
+"France","Spain",151,2
+"France","United Kingdom",158,2
+"France","Algeria",67,1
+"France","Morocco",80,1
+"France","United States",89,1
+"France","Portugal",51,1
+"France","Italy",148,2
+"Germany","Portugal",62,1
+"Germany","Croatia",55,1
+"Germany","United States",114,2
+"Germany","United Kingdom",103,1
+"Germany","Greece",166,2
+"Germany","Italy",221,2
+"Germany","Austria",67,1
+"Germany","Turkey",128,2
+"Germany","Spain",353,3
+"Germany","France",84,1
+"Greece","Germany",176,2
+"Greece","United Kingdom",105,1
+"Hong Kong","China",117,2
+"India","United Arab Emirates",81,1
+"Indonesia","Singapore",62,1
+"Ireland","Spain",53,1
+"Ireland","United Kingdom",63,1
+"Italy","Germany",221,2
+"Italy","Spain",120,2
+"Italy","United States",53,1
+"Italy","United Kingdom",141,2
+"Italy","France",149,2
+"Japan","United States",80,1
+"Japan","South Korea",105,1
+"Japan","China",140,2
+"Japan","Taiwan",68,1
+"Mexico","United States",369,3
+"Morocco","France",79,1
+"Netherlands","Spain",68,1
+"Netherlands","United Kingdom",53,1
+"New Zealand","Australia",77,1
+"Norway","Spain",52,1
+"Pakistan","United Arab Emirates",51,1
+"Poland","United Kingdom",65,1
+"Portugal","France",53,1
+"Portugal","Germany",64,1
+"Portugal","United Kingdom",84,1
+"Puerto Rico","United States",53,1
+"Russia","Tajikistan",71,1
+"Russia","Uzbekistan",82,1
+"Russia","Kyrgyzstan",51,1
+"Saudi Arabia","Egypt",57,1
+"Singapore","Indonesia",63,1
+"South Korea","Japan",104,1
+"South Korea","China",152,2
+"Spain","France",149,2
+"Spain","Norway",52,1
+"Spain","Belgium",57,1
+"Spain","Ireland",53,1
+"Spain","Germany",354,3
+"Spain","United Kingdom",518,3
+"Spain","Netherlands",68,1
+"Spain","Italy",120,2
+"Spain","United States",57,1
+"Taiwan","China",191,2
+"Taiwan","Japan",67,1
+"Tajikistan","Russia",72,1
+"Thailand","China",73,1
+"Turkey","United Kingdom",91,1
+"Turkey","Germany",128,2
+"United Arab Emirates","India",81,1
+"United Arab Emirates","Pakistan",51,1
+"United Kingdom","France",157,2
+"United Kingdom","Netherlands",54,1
+"United Kingdom","Spain",512,3
+"United Kingdom","Italy",141,2
+"United Kingdom","Ireland",63,1
+"United Kingdom","Greece",95,1
+"United Kingdom","Poland",65,1
+"United Kingdom","Turkey",89,1
+"United Kingdom","Germany",103,1
+"United Kingdom","Portugal",82,1
+"United Kingdom","United States",207,2
+"United States","Dominican Republic",61,1
+"United States","Mexico",373,3
+"United States","Canada",363,3
+"United States","United Kingdom",203,2
+"United States","Japan",78,1
+"United States","Italy",53,1
+"United States","Puerto Rico",53,1
+"United States","Spain",57,1
+"United States","Brazil",58,1
+"United States","Germany",115,2
+"United States","France",91,1
+"United States","China",58,1
+"United States","Bahamas",72,1
+"Uzbekistan","Russia",81,1
