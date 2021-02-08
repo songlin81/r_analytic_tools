@@ -29,6 +29,21 @@ smoothScatter(iris$PetalLengthCm,iris$PetalWidthCm, nbin = 64,main = "Scatter pl
               xlab = "PetalLengthCm",ylab = "PetalWidthCm")
 boxplot(SepalLengthCm~Species,data = iris,main = "Box plot",ylab = "SepalLengthCm")
 
+###################################################################################
+install.packages("ggplot2")
+install.packages("GGally")
+install.packages("gridExtra")
+install.packages("dplyr")
+library(ggplot2)
+library(GGally)
+library(gridExtra)
+library(dplyr)
+
+p1 <- ggplot(iris,aes(x = PetalLengthCm,y = PetalWidthCm))+
+  theme_bw(base_family = "STKaiti",base_size = 9)+
+  geom_point(aes(colour = Species))+
+  labs(title = "Scatter plot")
+p1
 
 
 
