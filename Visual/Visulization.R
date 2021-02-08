@@ -162,12 +162,175 @@ install.packages("gganimate")
 install.packages("gifski")
 library(gganimate)
 library(gifski)
-
-## ????????????????????????????????????????????????
 index <- (athletedata$region %in% region30[1:20]&(!is.na(athletedata$Medal)))
 plotdata <- athletedata[index,]
-
 plotdata2 <- plotdata%>%group_by(Year,region,Medal)%>%
   summarise(Medalnum = n())
 head(plotdata2)
+plotdata2$Year <- as.integer(plotdata2$Year)
+ggplot(plotdata2,aes(x=region,y=Medalnum,fill=Medal))+
+  theme_bw()+
+  geom_bar(stat = "identity",position = "stack")+
+  theme(axis.text.x = element_text(angle = 90,vjust = 0.5))+
+  scale_fill_brewer(palette="RdYlGn")+
+  transition_time(Year) +
+  labs(title = 'Year: {frame_time}')
 
+p2 <- ggplot(plotdata2[plotdata2$Year == 2000,],aes(x=region,y=Medalnum,fill=Medal))+
+  theme_bw()+
+  geom_bar(stat = "identity",position = "stack")+
+  theme(axis.text.x = element_text(angle = 90,vjust = 0.5))+
+  scale_fill_brewer(palette="RdYlGn")+
+  labs(title = 'Year: 2000')
+p2
+
+p3 <- ggplot(plotdata2[plotdata2$Year == 1996,],aes(x=region,y=Medalnum,fill=Medal))+
+  theme_bw()+
+  geom_bar(stat = "identity",position = "stack")+
+  theme(axis.text.x = element_text(angle = 90,vjust = 0.5))+
+  scale_fill_brewer(palette="RdYlGn")+
+  labs(title = 'Year: 1996')
+p3
+
+#############################################################################
+install.packages("treemap")
+library(treemap)
+plotdata <- athletedata%>%
+  group_by(region,Sex)%>%
+  summarise(number=n())
+## Calculate number of medals
+plotdata2 <- athletedata[!is.na(athletedata$Medal),]%>%
+  group_by(region,Sex)%>%
+  summarise(Medalnum=n())
+## Join data
+plotdata3 <- inner_join(plotdata2,plotdata,by=c("region", "Sex"))
+
+treemap(plotdata3,index = c("Sex","region"),vSize = "number",
+        vColor = "Medalnum",type="value",palette="RdYlGn",
+        title = "Number of athletes per country by gender",fontfamily.title = "STKaiti",
+        title.legend = "# of medals",fontfamily.legend="STKaiti")
+
+
+install.packages("maps")
+install.packages("geosphere")
+library(maps)
+library(geosphere)
+usaairline <- read.csv("Visual/data/usaairline.csv")
+airportusa <- read.csv("Visual/data/airportusa.csv")
+head(airportusa)
+head(usaairline)
+
+map("state",col="palegreen", fill=TRUE, bg="lightblue", lwd=0.1)
+
+points(x=airportusa$Longitude, y=airportusa$Latitude, pch=19, cex=0.4,col="tomato")
+
+col.1 <- adjustcolor("orange", alpha=0.4)
+
+for(i in 1:nrow(usaairline)) {
+  node1 <- usaairline[i,c("Latitude.x","Longitude.x")]
+  node2 <- usaairline[i,c("Latitude.y","Longitude.y")]
+  arc <- gcIntermediate( c(node1$Longitude.x, node1$Latitude.x),
+                         c(node2$Longitude.y, node2$Latitude.y),
+                         n=1000, addStartEnd=TRUE )
+  lines(arc, col=col.1, lwd=0.2)
+}
+
+
+install.packages("igraph")
+library(igraph)
+vertexdata <- read.csv("Visual/data/vertex.csv")
+edgedata <- read.csv("Visual/data/edge.csv")
+head(vertexdata)
+head(edgedata)
+
+g <- graph_from_data_frame(edgedata,vertices = vertexdata,directed = TRUE)
+E(g)$width <- log10(E(g)$connectnumber)
+colrs <- c("gray50", "tomato", "gold")
+V(g)$color <- colrs[V(g)$vtype]
+E(g)$color <- colrs[E(g)$etype]
+par(mfrow=c(2,2), mar=c(0,0,0,0),cex = 1) 
+plot(g, layout =  layout_in_circle(g),
+     edge.arrow.size=0.4,
+     vertex.size = 10*log10(V(g)$airportnumber), 
+     vertex.label.cex = 0.6)
+
+plot(g, layout =  layout_with_fr(g),
+     edge.arrow.size=0.4,
+     vertex.size = 10*log10(V(g)$airportnumber), 
+     vertex.label.cex = 0.6)
+
+plot(g, layout =  layout_on_sphere(g),
+     edge.arrow.size=0.4,
+     vertex.size = 10*log10(V(g)$airportnumber), 
+     vertex.label.cex = 0.6)
+plot(g, layout =  layout_randomly(g),
+     edge.arrow.size=0.4,
+     vertex.size = 10*log10(V(g)$airportnumber), 
+     vertex.label.cex = 0.6)
+
+#############################################################################
+
+install.packages("VennDiagram")
+library(VennDiagram)
+
+vcol <- c("red","blue","green","DeepPink")
+T<-venn.diagram(list(First =c(1:30),
+                     Second=seq(1,50,by = 2),
+                     Third =seq(2,50,by = 2),
+                     Four = c(20,70)),
+                filename = NULL,lwd = 0.5,
+                fill = vcol,alpha = 0.5,margin = 0.1)
+grid.draw(T)
+
+#############################################################################
+
+install.packages("UpSetR")
+library(UpSetR)
+
+one  <- 1:100
+two <- seq(1,200,by = 2)
+three <- seq(10,300,by = 5)
+four <- seq(2,400,by = 4)
+five <- seq(10,500,by = 10)
+six <- seq(3,400,by = 3)
+
+all <- unique(c(one,two,three,four,five,six))
+plotdata <- data.frame(matrix(nrow = length(all),ncol = 7))
+colnames(plotdata) <-c("element","one","two","three","four","five","six")
+plotdata[,1] <- all
+for (i in 1:length(all)) {
+  plotdata[i,2] <- ifelse(all[i] %in% one,1,0)
+  plotdata[i,3] <- ifelse(all[i] %in% two,1,0)
+  plotdata[i,4] <- ifelse(all[i] %in% three,1,0)
+  plotdata[i,5] <- ifelse(all[i] %in% four,1,0)
+  plotdata[i,6] <- ifelse(all[i] %in% five,1,0)
+  plotdata[i,7] <- ifelse(all[i] %in% six,1,0)
+}
+head(plotdata)
+
+upset(plotdata,
+      sets = c("one","two","three","four","five","six"),
+      nintersects = 40,
+      order.by = "freq",
+      matrix.color  = "black",
+      main.bar.color = "red",
+      sets.bar.color = "tomato",
+      point.size  = 2.5,
+      line.size = 0.5,
+      mb.ratio = c(0.65, 0.35))
+
+#############################################################################
+
+install.packages("plot3D")
+library(plot3D)
+
+x <- y <- seq(0,10,by = 0.5)
+xy <- mesh(x,y)
+z <- sin(xy$x) + cos(xy$y) + sin(xy$x) * cos(xy$y)
+par(mfrow = c(1,2))
+hist3D(x,y,z,phi = 45, theta = 45,space = 0.1,colkey = F,bty = "g")
+surf3D(xy$x,xy$y,z,colkey = F,border = "black",bty = "b2")
+
+# Export to *.html to view the result (Save as web page)
+plot_ly(x = xy$x, y = xy$y, z = z,showscale = FALSE)%>% 
+  add_surface()
