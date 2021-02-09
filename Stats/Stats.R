@@ -240,10 +240,32 @@ ggline(ToothGrowth, x = "dose", y = "len", color = "supp",
 
 #################################################################################
 # Contingency Table Analysis
+testdata<- read.csv("Stats/data/Material.csv")
+rownames(testdata) <- testdata$X
+testdata$X <- NULL
+testdata
+
+(result <- chisq.test(testdata))
+
+result$expected
+
+par(family = "STKaiti")
+mosaicplot(testdata,main = "",color = TRUE)
+
+library(vcd)
+assocstats(as.matrix(testdata))
 
 
+library(vcd)
+library(MASS)
+data("UCBAdmissions")
+UCBAdmissions
+mosaic(~Admit+Dept+Gender,data=UCBAdmissions,shade = TRUE, legend = TRUE)
 
+loglm(~Admit+Dept+Gender, data=UCBAdmissions)
 
+loglm(~Admit+Dept+Gender+Admit*Dept+Gender*Dept, data=UCBAdmissions)
 
+mosaic(~Admit+Gender,data=UCBAdmissions,shade = TRUE, legend = TRUE)
 
 
