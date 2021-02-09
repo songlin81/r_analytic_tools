@@ -224,9 +224,26 @@ ToothGrowth$dose <- factor(ToothGrowth$dose,levels = c(0.5, 1, 2),
 str(ToothGrowth)
 
 install.packages("ggpubr")
-library("ggpubr")
+library(ggpubr)
 ggviolin(ToothGrowth, x = "dose", y = "len", color = "supp",
          add = "dotplot",palette = c("red", "blue"))
+
+aov1 <- aov(len~dose+supp,data = ToothGrowth)
+summary(aov1)
+ggline(ToothGrowth, x = "dose", y = "len", color = "supp",
+       shape = "supp",add = "mean",palette = c("red", "blue"))
+
+aov1 <- aov(len~dose*supp,data = ToothGrowth)
+summary(aov1)
+ggline(ToothGrowth, x = "dose", y = "len", color = "supp",
+       shape = "supp",add = "mean",palette = c("red", "blue"))
+
+#################################################################################
+# Contingency Table Analysis
+
+
+
+
 
 
 
