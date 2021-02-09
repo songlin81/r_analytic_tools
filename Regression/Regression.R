@@ -202,11 +202,131 @@ exp(coef(model))
 
 ##################################################################
 # Ridge & Lasso Regression
+library(readxl)
+library(caret)
+library(glmnet)
+library(corrplot)
+library(Metrics)
+library(ggplot2)
 
+diabete <- read.csv("Regression/data/diabetes.csv",sep = "\t")
+diabete_cor <- cor(diabete)
+corrplot.mixed(diabete_cor,tl.col="black",tl.pos = "d",number.cex = 0.8)
 
+set.seed(123)
+d_index <- createDataPartition(diabete$Y,p = 0.7)
+train_d <- diabete[d_index$Resample1,]
+test_d <- diabete[-d_index$Resample1,]
+scal <- preProcess(train_d,method = c("center","scale"))
+train_ds <- predict(scal,train_d)
+test_ds <- predict(scal,test_d)
+scal$mean
+scal$std
 
+# Ridge
+lambdas <- seq(0,5, length.out = 200)
+X <- as.matrix(train_ds[,1:10])
+Y <- train_ds[,11]
+set.seed(1245)
+ridge_model <- cv.glmnet(X,Y,alpha = 0,lambda = lambdas,nfolds =3)
+plot(ridge_model)
+plot(ridge_model$glmnet.fit, "lambda", label = T)
 
+ridge_min <- ridge_model$lambda.min
+ridge_min
+ridge_best <- glmnet(X,Y,alpha = 0,lambda = ridge_min)
+summary(ridge_best)
+coef(ridge_best)
 
+test_pre <- predict(ridge_best,as.matrix(test_ds[,1:10]))
+sprintf("After: %f",mae(test_ds$Y,test_pre))
 
+test_pre_o <- as.vector(test_pre[,1] * scal$std[11] + scal$mean[11])
+sprintf("before: %f",mae(test_d$Y,test_pre_o))
 
+##################################################################
+# Lasso
+library(readxl)
+library(caret)
+library(glmnet)
+library(corrplot)
+library(Metrics)
+library(ggplot2)
+diabete <- read.csv("Regression/data/diabetes.csv",sep = "\t")
+diabete_cor <- cor(diabete)
+corrplot.mixed(diabete_cor,tl.col="black",tl.pos = "d",number.cex = 0.8)
+
+set.seed(123)
+d_index <- createDataPartition(diabete$Y,p = 0.7)
+train_d <- diabete[d_index$Resample1,]
+test_d <- diabete[-d_index$Resample1,]
+scal <- preProcess(train_d,method = c("center","scale"))
+train_ds <- predict(scal,train_d)
+test_ds <- predict(scal,test_d)
+scal$mean
+scal$std
+
+lambdas <- seq(0,2, length.out = 100)
+X <- as.matrix(train_ds[,1:10])
+Y <- train_ds[,11]
+set.seed(1245)
+lasso_model <- cv.glmnet(X,Y,alpha = 1,lambda = lambdas,nfolds =3)
+plot(lasso_model)
+plot(lasso_model$glmnet.fit, "lambda", label = T)
+lasso_min <- lasso_model$lambda.min
+lasso_min
+lasso_lse <- lasso_model$lambda.1se
+lasso_lse
+
+lasso_best <- glmnet(X,Y,alpha = 1,lambda = lasso_min)
+summary(lasso_best)
+coef(lasso_best)
+
+test_pre <- predict(lasso_best,as.matrix(test_ds[,1:10]))
+sprintf("After: %f",mae(test_ds$Y,test_pre))
+test_pre_o <- as.vector(test_pre[,1] * scal$std[11] + scal$mean[11])
+sprintf("Before: %f",mae(test_d$Y,test_pre_o))
+
+#####################################################################
+voice <- read.csv("Regression/data/voice.csv",stringsAsFactors = F)
+voice$label <- factor(voice$label,levels = c("male","female"),labels = c(0,1))
+
+set.seed(123)
+index <- createDataPartition(voice$label,p = 0.7)
+voicetrain <- voice[index$Resample1,]
+voicetest <- voice[-index$Resample1,]
+
+lambdas <- c(0.000001,0.00001,0.0001,0.001,0.01,0.1,0.5,1,2)
+X <- as.matrix(voicetrain[,1:20])
+Y <- voicetrain$label
+lasso_model <- cv.glmnet(X,Y,alpha = 1,lambda = lambdas,nfolds =3,
+                         family = "binomial",type.measure = "class")
+plot(lasso_model)
+plot(lasso_model$glmnet.fit, "lambda", label = T)
+
+lasso_min <- lasso_model$lambda.min
+lasso_min
+lasso_best <- glmnet(X,Y,alpha = 1,lambda = lasso_min,
+                     family = "binomial")
+summary(lasso_best)
+coef(lasso_best)
+
+test_pre <- predict(lasso_best,as.matrix(voicetest[,1:20]))
+test_pre <- as.factor(ifelse(test_pre > 0.5,1,0))
+sprintf("Accuracy on test: %f",accuracy(voicetest$label,test_pre))
+
+thresh <- seq(0.05,0.95,by = 0.05)
+acc <- thresh
+for (ii in 1:length(thresh)){
+  test_pre <- predict(lasso_best,as.matrix(voicetest[,1:20]))
+  test_pre <- as.factor(ifelse(test_pre > thresh[ii],1,0))
+  acc[ii] <- accuracy(voicetest$label,test_pre)
+}
+plotdata <- data.frame(thresh = thresh,acc = acc)
+ggplot(plotdata,aes(x = thresh,y = acc))+
+  theme_bw(base_family = "STKaiti")+
+  geom_point()+geom_line()+ylim(c(0.95,1))+
+  scale_x_continuous("threshold",thresh)+
+  labs(y = "Model Accuracy",title = "Lasso Regression")+
+  theme(plot.title = element_text(hjust = 0.5))
 
