@@ -143,6 +143,12 @@ ggplot(plotdata,aes(fill = label))+
   facet_wrap(~variable,scales = "free")
 
 
+voice$label <- factor(voice$label,levels = c("male","female"),labels = c(0,1))
+index <- createDataPartition(voice$label,p = 0.7)
+voicetrain <- voice[index$Resample1,]
+voicetest <- voice[-index$Resample1,]
+voicelm <- glm(label~.,data = voicetrain,family = "binomial")
+summary(voicelm)
 
 
 
