@@ -643,6 +643,73 @@ library(R.matlab)
 #Get all packages currently loaded in the R environment
 search()
 
+install.packages("XML")
+library(XML)
+result <- xmlParse(file = "Practical/data/emp.xml")
+print(result)
+
+#############################################################################
+### Data Reshaping ###
+
+city <- c("Tampa","Seattle","Hartford","Denver")
+state <- c("FL","WA","CT","CO")
+zipcode <- c(33602,98104,06161,80294)
+addresses <- cbind(city,state,zipcode)
+cat("# # # # The First data frame\n") 
+print(addresses)
+
+new.address <- data.frame(
+  city = c("Lowry","Charlotte"),
+  state = c("CO","FL"),
+  zipcode = c("80230","33949"),
+  stringsAsFactors = FALSE
+)
+cat("# # # The Second data frame\n") 
+print(new.address)
+
+all.addresses <- rbind(addresses,new.address)
+cat("# # # The combined data frame\n") 
+print(all.addresses)
+
+
+library(MASS)
+head(Pima.te)
+head(Pima.tr)
+merged.Pima <- merge(x = Pima.te, y = Pima.tr,
+                     by.x = c("bp", "bmi"),
+                     by.y = c("bp", "bmi")
+)
+print(merged.Pima)
+nrow(merged.Pima)
+
+
+install.packages("reshape"); 
+library(reshape)
+print(ships)
+molten.ships <- melt(ships, id = c("type","year"))
+print(molten.ships)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
