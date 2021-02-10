@@ -1,5 +1,5 @@
-myString <- "Hello, World!"
-print ( myString)
+myString <- "R101"
+print (myString)
 
 
 # v0cn140@CNTSNW10317253 MINGW64 /c/repo/2021/DataR/Roc/analytictool/Practical (main)
@@ -55,7 +55,7 @@ print(factor_apple)
 print(nlevels(factor_apple))
 
 # data frame.
-BMI <- 	data.frame(
+BMI <- data.frame(
   gender = c("Male", "Male","Female"), 
   height = c(152, 171.5, 165), 
   weight = c(81,93, 78),
@@ -234,7 +234,6 @@ for (i in v) {
 
 v <- LETTERS[1:6]
 for (i in v) {
-  
   if (i == "D") {
     next
   }
@@ -301,7 +300,7 @@ print(result)
 # Left justify strings.
 result <- format("Hello", width = 8, justify = "l")
 print(result)
-# Justfy string with center.
+# Justify string with center.
 result <- format("Hello", width = 8, justify = "c")
 print(result)
 
@@ -683,65 +682,12 @@ print(merged.Pima)
 nrow(merged.Pima)
 
 
-install.packages("reshape"); 
-library(reshape)
+install.packages("reshape2"); 
+library(reshape2)
 print(ships)
 molten.ships <- melt(ships, id = c("type","year"))
 print(molten.ships)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+recasted.ship <- dcast(molten.ships, type+year~variable, sum)
+print(recasted.ship)
 
