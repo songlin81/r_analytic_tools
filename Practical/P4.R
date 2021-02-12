@@ -275,28 +275,138 @@ dev.off()
 
 ################################### Nonlinear Least Square ##########################################
 
+#We will consider a nonlinear model with assumption of initial values of its coefficients. 
+#Next we will see what is the confidence intervals of these assumed values 
+#so that we can judge how well these values fit into the model.
+#So let's consider the below equation for this purpose ???
+#    a = b1*x^2+b2
+#Let's assume the initial coefficients to be 1 and 3 and fit these values into nls() function.
+
+xvalues <- c(1.6,2.1,2,2.23,3.71,3.25,3.4,3.86,1.19,2.21)
+yvalues <- c(5.19,7.43,6.94,8.11,18.75,14.88,16.06,19.12,3.21,7.58)
+png(file = "nls.png")
+plot(xvalues,yvalues)
+# Take the assumed values and fit into the model.
+model <- nls(yvalues ~ b1*xvalues^2+b2,start = list(b1 = 1,b2 = 3))
+# Plot the chart with new data by fitting it to a prediction from 100 data points.
+new.data <- data.frame(xvalues = seq(min(xvalues),max(xvalues),len = 100))
+lines(new.data$xvalues,predict(model,newdata = new.data))
+dev.off()
+# Get the sum of the squared residuals.
+print(sum(resid(model)^2))
+# Get the confidence intervals on the chosen values of the coefficients.
+print(confint(model))
+
+# We can conclude that the value of b1 is more close to 1 
+# while the value of b2 is more close to 2 and not 3.
 
 
+################################# Decision Tree ####################################################
+# Decision tree is a graph to represent choices and their results in form of a tree. 
+# The nodes in the graph represent an event or choice and the edges of the graph 
+# represent the decision rules or conditions.
+
+install.packages("party")
+library(party)
+print(head(readingSkills, 20))
+
+input.dat <- readingSkills[c(1:105),]
+png(file = "decision_tree.png")
+output.tree <- ctree(
+  nativeSpeaker ~ age + shoeSize + score, 
+  data = input.dat)
+plot(output.tree)
+dev.off()
+
+#Conclusion
+# From the decision tree shown above we can conclude that anyone whose readingSkills score is less than 38.3 
+# and age is more than 6 is not a native Speaker.
 
 
+################################# Random Forest ###############################################
+
+# In the random forest approach, a large number of decision trees are created. 
+# Every observation is fed into every decision tree. 
+# The most common outcome for each observation is used as the final output. 
+# A new observation is fed into all the trees and taking a majority vote for each classification model.
+# An error estimate is made for the cases which were not used while building the tree. 
+# That is called an OOB (Out-of-bag) error estimate which is mentioned as a percentage.
+
+install.packages("randomForest")
+
+library(party)
+library(randomForest)
+library(caret)
+print(head(readingSkills))
+
+output.forest <- randomForest(nativeSpeaker ~ age + shoeSize + score, 
+                              data = readingSkills)
+# View the forest results.
+print(output.forest) 
+# Importance of each predictor.
+print(importance(output.forest,type = 2)) 
+
+# Conclusion
+# From the random forest shown above we can conclude that the shoesize 
+# and score are the important factors deciding if someone is a native speaker or not. 
+# Also the model has only 1% error which means we can predict with 99% accuracy.
 
 
+############################## Survival Analysis ####################################
+# Survival analysis deals with predicting the time when a specific event is going to occur.
+
+print(getwd())
+setwd("C:/repo/2021/DataR/Roc/analytictool/Practical")
+print(getwd())
+
+library("survival")
+print(head(pbc))
+
+# Create the survival object. 
+survfit(Surv(pbc$time,pbc$status == 2)~1)
+png(file = "survival.png")
+plot(survfit(Surv(pbc$time,pbc$status == 2)~1))
+dev.off()
+
+# The trend in the above graph helps us predicting the probability of survival 
+# at the end of a certain number of days.
 
 
+################################# Chi Square Test ####################################
+#Chi-Square test is a statistical method to determine 
+#if two categorical variables have a significant correlation between them. 
+#Both those variables should be from same population and they should be categorical like 
+#??? Yes/No, Male/Female, Red/Green etc.
 
+#For example, we can build a data set with observations on people's ice-cream 
+#buying pattern and try to correlate the gender of a person with the flavor 
+#of the ice-cream they prefer. If a correlation is found we can plan 
+#for appropriate stock of flavors by knowing the number of gender of people visiting.
 
+library("MASS")
+print(str(Cars93))
 
+#The above result shows the dataset has many Factor variables 
+#which can be considered as categorical variables. 
+#For our model we will consider the variables "AirBags" and "Type". 
+#Here we aim to find out any significant correlation between the types of car sold 
+#and the type of Air bags it has. If correlation is observed we can estimate 
+#which types of cars can sell better with what types of air bags.
 
+# Create a data frame from the main data set.
+car.data <- data.frame(Cars93$AirBags, Cars93$Type)
+# Create a table with the needed variables.
+car.data = table(Cars93$AirBags, Cars93$Type) 
+print(car.data)
+# Perform the Chi-Square test.
+print(chisq.test(car.data))
 
+# The result shows the p-value of less than 0.05 which indicates a string correlation.
+# In this case p < 0.05, so this result is thought of as being "significant" meaning 
+# we think the variables are not independent.
 
-
-
-
-
-
-
-
-
-
+# Results show that p < 0.01, indicating a significant correlation 
+# between the type of car sold and the airbag. 
+# Can estimate which type of car can be better Which type of airbag is sold.
 
 
